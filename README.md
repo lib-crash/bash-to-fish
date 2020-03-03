@@ -20,7 +20,7 @@ options:
 
 convert bash script to fish and then run it
 ```
-fish$ bash-to-fish.sh myscript.sh output.fish
+fish$ ./bash-to-fish.sh myscript.sh output.fish
 fish$ ./output.fish
 ```
 
