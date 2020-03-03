@@ -2,6 +2,7 @@
 IF_FILE=bash.sh
 OF_FILE=/dev/stdout
 IS_DEBUG=0
+IS_RUN=0
 
 if [ "$#" == "0" ] || [ "$1" == "--help" ] || [ "$1" == "-h" ]
 then
@@ -11,12 +12,18 @@ then
     echo "  and then prints it to stdout. Or writes it to given"
     echo "  fish file."
     echo "options:"
-    echo "  --debug"
+    echo "  --debug     only for development"
+    echo "  --run       run transpiled script directly in fish"
     exit 0
 fi
 if [ "$1" == "--debug" ]
 then
     IS_DEBUG="1"
+    shift
+elif [ "$1" == "--run" ]
+then
+    IS_RUN=1
+    OF_FILE="$(mktemp /tmp/bash-to-fish.run.XXXXXX)"
     shift
 fi
 IF_FILE="$1"
@@ -101,5 +108,11 @@ done < "$IF_FILE" > "$OF_FILE"
 if [ "$OF_FILE" != /dev/stdout ] && [ -f "$OF_FILE" ]
 then
     chmod +x "$OF_FILE"
+fi
+
+if [ "$IS_RUN" ]
+then
+    fish "$OF_FILE"
+    rm "$OF_FILE"
 fi
 
